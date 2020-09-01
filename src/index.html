@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>COVID-19 Indian State-wise Tracker by Sarathlal</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+  
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script >
+  $(document).ready(function () {   
+    $('body').on('change','#test1', function() {
+         i = this.value;
+         //console.log(i)
+         myfunc(i)
+             });
+}); 
+function myfunc(i){
+    var url = "https://api.covidindiatracker.com/state_data.json"
+
+    $.getJSON(url,function(data){
+
+        var total_active,total_recovered,total_deaths,total_confirmed
+
+        var district=[]
+        var confirmed =[]
+        
+        $.each(data[i].districtData,function(id,obj){
+            district.push(obj.name)
+            confirmed.push(obj.confirmed)
+       
+        })
+
+       
+        total_confirmed = data[i].districtData.confirmed
+        
+
+         $("#confirmed").append(total_confirmed)
+        
+        var myChart = document.getElementById('myChart').getContext('2d')
+
+        var chart  = new Chart(myChart,{
+            type:'line',
+            data:{
+                labels:district,
+                datasets:[
+                    {
+                        label: "Confirmed Cases",
+                        data: confirmed,
+                        backgroundColor: '#f1c40f',
+                        minBarLength: 100
+                    }
+                ]
+            },
+            options:{}
+        })
+    })
+}
+</script>
+<script>
+window.onscroll = function() {myFunction()};
+
+function myFunction() {
+  var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  var scrolled = (winScroll / height) * 100;
+  document.getElementById("myBar").style.width = scrolled + "%";
+}
+</script>
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
